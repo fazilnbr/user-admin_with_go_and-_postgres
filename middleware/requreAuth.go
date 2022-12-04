@@ -36,8 +36,10 @@ func RequreAuth(c *gin.Context) {
 		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
 		return []byte(os.Getenv("SECRET")), nil
 	})
+	fmt.Println(token)
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid && token != nil {
+		fmt.Println("errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
 
 		// check the exp
 
@@ -50,6 +52,7 @@ func RequreAuth(c *gin.Context) {
 		var user models.User
 
 		initializer.DB.First(&user, claims["sub"])
+		fmt.Println(user.ID)
 		if user.ID == 0 {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
@@ -62,9 +65,12 @@ func RequreAuth(c *gin.Context) {
 
 		c.Next()
 
-		fmt.Println(claims["foo"], claims["nbf"])
+		fmt.Println(claims["exp"], claims["sub"])
 	} else {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		fmt.Println("lllllllllllllllll")
+		c.Set("user", nil)
+		// c.Next()
+		// c.AbortWithStatus(http.StatusUnauthorized)
 	}
 
 }

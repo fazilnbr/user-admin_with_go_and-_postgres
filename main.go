@@ -26,7 +26,7 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("templates/*.html")
 
-	r.GET("/", controllers.UserHome)
+	r.GET("/", midileware.RequreAuth, controllers.UserHome)
 
 	r.GET("/login", controllers.UserLogin)
 

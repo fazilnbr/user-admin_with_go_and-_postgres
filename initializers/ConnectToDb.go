@@ -16,7 +16,7 @@ func ConnectToDb() {
 		host     = "localhost"
 		port     = 5432
 		user     = "fasil"
-		database = "jwtauth"
+		database = "useradminauth"
 		password = "0000"
 	)
 

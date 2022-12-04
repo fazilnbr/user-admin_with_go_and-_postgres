@@ -59,8 +59,11 @@
       </nav>
 
     </section>
-
+    {{if . }}
+    <p>{{ .message }}</p>
+    {{ else }}
     <h1 style="color: white;">Hi User</h1>
+    {{ end }}
 
     <section class="h-100 gradient-custom-2">
       <div class="container py-5 h-100">
@@ -69,7 +72,7 @@
             <div class="card">
               <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
                 <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnYnD-vKF8P_ez6LAALGISa_HpdmzSFdpFvVW17_0&s"
                     alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
                     style="width: 150px; z-index: 1">
                   <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
@@ -78,7 +81,7 @@
                   </button>
                 </div>
                 <div class="ms-3" style="margin-top: 130px;">
-                  <h5>Andy Horwitz</h5>
+                  <h5>{{ .message.Name}}</h5>
                   <p>New York</p>
                 </div>
               </div>
@@ -102,9 +105,11 @@
                 <div class="mb-5">
                   <p class="lead fw-normal mb-1">About</p>
                   <div class="p-4" style="background-color: #f8f9fa;">
-                    <p class="font-italic mb-1">Web Developer</p>
-                    <p class="font-italic mb-1">Lives in New York</p>
-                    <p class="font-italic mb-0">Photographer</p>
+                    <p class="font-italic mb-1">Email  :  {{ .message.Email}}</p>
+                    <p class="font-italic mb-1">DOB  :  {{ .message.Dob}}</p>
+                    <p class="font-italic mb-1">Gender  :  {{ .message.Gender}}</p>
+                    <p class="font-italic mb-0">Status  :  {{ .message.Status}}</p>
+                   
                   </div>
                 </div>
                 
