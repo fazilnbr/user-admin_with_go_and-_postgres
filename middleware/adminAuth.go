@@ -12,19 +12,21 @@ import (
 	"makeconnection.net/sqlandgo/models"
 )
 
-func RequreAuth(c *gin.Context) {
+func AdminAuth(c *gin.Context) {
 
 	defer func() {
 
 		if err := recover(); err != nil {
-			c.HTML(http.StatusOK, "home.html", gin.H{})
+			c.HTML(http.StatusOK, "adminHome.html", gin.H{})
 			fmt.Printf("\n\nRecovered from panic. %s\n\n", err)
 		}
 	}()
 	// Get the cookie of the request
 
-	tokenString, err := c.Cookie("auth")
+	tokenString, err := c.Cookie("adm-auth")
 	if err != nil {
+
+		// c.HTML(http.StatusOK, "adminHome.html", gin.H{})
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 
@@ -54,17 +56,11 @@ func RequreAuth(c *gin.Context) {
 
 		// find the user with token subject
 
-		var user models.User
+		var user models.Admin
 
 		initializer.DB.First(&user, claims["sub"])
 
 		if user.ID == 0 {
-			c.AbortWithStatus(http.StatusUnauthorized)
-		}
-		if user.Status == "blocked" {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "you are blocked by admin",
-			})
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 
@@ -78,7 +74,8 @@ func RequreAuth(c *gin.Context) {
 
 		// fmt.Println(claims["exp"], claims["sub"])
 	} else {
-		c.HTML(http.StatusOK, "home.html", gin.H{})
+		fmt.Println("else        rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+		c.HTML(http.StatusOK, "adminHome.html", gin.H{})
 
 		//c.AbortWithStatus(http.StatusUnauthorized)
 	}

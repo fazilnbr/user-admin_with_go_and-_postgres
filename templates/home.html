@@ -23,10 +23,11 @@
 
 
 
+    
     <section >
       <nav class="navbar navbar-expand-lg border border-4 border-light">
         <div class="container-fluid">
-          <a class="navbar-brand text-light" href="">GO</a>
+          <a class="navbar-brand text-light" href="/">GO</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -45,12 +46,11 @@
             </ul>
             <form class="d-flex" role="search">
 
-
-              <a href="/login" class="btn btn-outline-success" type="submit">login </a>
-
-
-
-              
+              {{ if . }}
+              <a href="/logout" class="btn btn-outline-danger" type="submit">Logout </a>
+              {{ else }}
+              <a href="/login" class="btn btn-outline-success" type="submit">Login </a>
+              {{ end }}          
 
 
             </form>
@@ -59,12 +59,10 @@
       </nav>
 
     </section>
-    {{if . }}
-    <p>{{ .message }}</p>
-    {{ else }}
-    <h1 style="color: white;">Hi User</h1>
-    {{ end }}
+    
 
+
+    {{ if .message }}
     <section class="h-100 gradient-custom-2">
       <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -119,6 +117,10 @@
         </div>
       </div>
     </section>
+    {{ else }}
+    <br><br><br><br><br>
+    <h1 style="color: white; margin-left: 100px;">HI User,&nbsp;&nbsp;&nbsp; Please Login to Explore </h1>
+    {{ end }}
 
 
 

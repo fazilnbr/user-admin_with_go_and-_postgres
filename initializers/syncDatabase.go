@@ -6,5 +6,5 @@ import (
 
 func SincDatabase() {
 	DB.AutoMigrate(&models.User{})
-	// DB.AutoMigrate(&models.Admin{})
+	DB.AutoMigrate(&models.Admin{})
 }

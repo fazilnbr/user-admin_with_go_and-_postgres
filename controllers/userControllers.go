@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 
@@ -145,6 +146,19 @@ func UserLogin(c *gin.Context) {
 	c.HTML(http.StatusOK, "signin.html", gin.H{
 		"content": "This is an index page...",
 	})
+}
+
+func UserLogout(c *gin.Context) {
+
+	tokenString, err := c.Cookie("auth")
+	if err != nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
+	}
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie("auth", tokenString, -1, "", "", false, true)
+	location := url.URL{Path: "/"}
+	c.Redirect(http.StatusFound, location.RequestURI())
+
 }
 
 func UserAuth(c *gin.Context) {
