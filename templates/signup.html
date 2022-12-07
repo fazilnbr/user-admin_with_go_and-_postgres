@@ -28,6 +28,93 @@
 <body>
 
 
+
+  {{ if .message }}
+  <section class="h-100 bg-dark">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col">
+          <div class="card card-registration my-4">
+            <div class="row g-0">
+              <div class="col-xl-6 d-none d-xl-block">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
+                  alt="Sample photo" class="img-fluid"
+                  style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+              </div>
+              <div class="col-xl-6">
+                <form action="/editprofile-submit/{{ .message.ID}}" method="post">
+                <div class="card-body p-md-5 text-black">
+                  <h3 class="mb-5 text-uppercase">Register and enjoy </h3>
+
+                  
+                  <div class="row">
+
+                    <div class="form-outline">
+                      <input value="{{ .message.Name }}" name="Name" type="text" id="form3Example1m" class="form-control form-control-lg" />
+                      <label name="Name" class="form-label" for="form3Example1m">Name</label>
+                    </div>
+
+                  </div>
+
+
+                  <div class="form-outline mb-4">
+                    <input value="{{ .message.Dob }}" name="Dob" type="date" id="form3Example9" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example9">DOB</label>
+                  </div>
+
+
+                  <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
+
+                    <h6 class="mb-0 me-4">Gender: </h6>
+
+                    <div class="form-check form-check-inline mb-0 me-4">
+                      <input name="Gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="maleGender"
+                        value="Male" />
+                      <label class="form-check-label" for="maleGender">Male</label>
+                    </div>
+
+                    <div class="form-check form-check-inline mb-0 me-4">
+                      <input name="Gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="femaleGender"
+                        value="Female" />
+                      <label class="form-check-label" for="femaleGender">Female</label>
+                    </div>
+
+                    <div class="form-check form-check-inline mb-0">
+                      <input name="Gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="otherGender"
+                        value="Other" />
+                      <label class="form-check-label" for="otherGender">Other</label>
+                    </div>
+
+                  </div>
+
+
+
+
+                  <!-- <div class="form-outline mb-4">
+                    <input value="{{ .message.Email }}" name="Email" type="text" id="form3Example97" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example97">Email ID</label>
+                  </div>
+
+                  <div class="form-outline mb-4">
+                    <input value="{{ .message.Password }}" name="Password" type="text" id="form3Example99" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example99">Password</label>
+                  </div> -->
+
+                  <div class="d-flex justify-content-end pt-3">
+                    <a href="/" type="button" class="btn btn-light btn-lg">Go Back</a>
+                    <button type="submit" class="btn btn-warning btn-lg ms-2">Update</button>
+                  </div>
+
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {{ else }}
   <section class="h-100 bg-dark">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -56,7 +143,7 @@
 
 
                   <div class="form-outline mb-4">
-                    <input name="Dob" type="text" id="form3Example9" class="form-control form-control-lg" />
+                    <input name="Dob" type="date" id="form3Example9" class="form-control form-control-lg" />
                     <label class="form-label" for="form3Example9">DOB</label>
                   </div>
 
@@ -89,14 +176,24 @@
 
 
                   <div class="form-outline mb-4">
+                    <input name="Mobile" type="number" id="form3Example97" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example97">MOBILE NUMBER</label>
+                  </div>
+                  <div class="form-outline mb-4">
                     <input name="Email" type="text" id="form3Example97" class="form-control form-control-lg" />
                     <label class="form-label" for="form3Example97">Email ID</label>
                   </div>
 
                   <div class="form-outline mb-4">
-                    <input name="Password" type="text" id="form3Example99" class="form-control form-control-lg" />
+                    <input name="Password" type="password" id="form3Example99" class="form-control form-control-lg" />
                     <label class="form-label" for="form3Example99">Password</label>
                   </div>
+
+                  {{ if .error }}
+                  <p style="color: red;"> {{ .error }}</p>
+                  {{ else }}
+                  <p style="color: green;"> Please Give Correct data </p>
+                  {{ end }}
 
                   <div class="d-flex justify-content-end pt-3">
                     <button type="button" class="btn btn-light btn-lg">Reset</button>
@@ -112,6 +209,7 @@
       </div>
     </div>
   </section>
+  {{ end }}
 
 
 
