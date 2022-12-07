@@ -39,6 +39,10 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             {{ if .message }}
             <li class="nav-item">
+              <a href="/show-newusers" class="nav-link active text-light" aria-current="page" >New Users
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="/show-users" class="nav-link active text-light" aria-current="page" >User list
               </a>
             </li>
@@ -84,11 +88,14 @@
         <!-- here we use the view engine and print the data we get -->
             
         {{ if .users }}
-            <table class="table table-striped table-dark">
+
+        <input type="text" id="myInput" class="form-control bg-light text-dark" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+            <table id="myTable" class="table table-striped table-dark">
                 <tr>
                     <th>NAME</th>
                     <th>EMAIL</th>
-                    <th>VIEW</th>
+                    <th>VIEW FOR MORE</th>
                     <th>BLOCK</th>
                 </tr>
                 {{ range .users }}
@@ -113,6 +120,27 @@
 
 
 
+    <script>
+      function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }       
+        }
+      }
+      </script>
+      
 
 
 

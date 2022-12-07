@@ -37,7 +37,7 @@
                 <a class="nav-link active text-light" aria-current="page" href="">Profile</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" href="">About</a>
+                <a class="nav-link text-light" href="/editprofile">Edit Profile</a>
               </li>
             
               <li class="nav-item">
@@ -46,7 +46,7 @@
             </ul>
             <form class="d-flex" role="search">
 
-              {{ if . }}
+              {{ if .message }}
               <a href="/logout" class="btn btn-outline-danger" type="submit">Logout </a>
               {{ else }}
               <a href="/login" class="btn btn-outline-success" type="submit">Login </a>
@@ -62,6 +62,11 @@
     
 
 
+    {{ if .error }}
+    <br><br><br><br><br>
+    <h1 style="color: white; margin-left: 100px;">HI User,&nbsp;&nbsp;&nbsp; {{ .error }} For Some Reasone, Wait And Refresh </h1>
+    
+    {{ else }}
     {{ if .message }}
     <section class="h-100 gradient-custom-2">
       <div class="container py-5 h-100">
@@ -73,28 +78,28 @@
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnYnD-vKF8P_ez6LAALGISa_HpdmzSFdpFvVW17_0&s"
                     alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
                     style="width: 150px; z-index: 1">
-                  <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+                  <a href="/editprofile" type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
                     style="z-index: 1;">
                     Edit profile
-                  </button>
+                  </a>
                 </div>
                 <div class="ms-3" style="margin-top: 130px;">
                   <h5>{{ .message.Name}}</h5>
-                  <p>New York</p>
+                  <p>Kerala</p>
                 </div>
               </div>
               <div class="p-4 text-black" style="background-color: #f8f9fa;">
                 <div class="d-flex justify-content-end text-center py-1">
                   <div>
-                    <p class="mb-1 h5">253</p>
+                    <p class="mb-1 h5">0</p>
                     <p class="small text-muted mb-0">Photos</p>
                   </div>
                   <div class="px-3">
-                    <p class="mb-1 h5">1026</p>
+                    <p class="mb-1 h5">0</p>
                     <p class="small text-muted mb-0">Followers</p>
                   </div>
                   <div>
-                    <p class="mb-1 h5">478</p>
+                    <p class="mb-1 h5">0</p>
                     <p class="small text-muted mb-0">Following</p>
                   </div>
                 </div>
@@ -103,6 +108,7 @@
                 <div class="mb-5">
                   <p class="lead fw-normal mb-1">About</p>
                   <div class="p-4" style="background-color: #f8f9fa;">
+                    <p class="font-italic mb-1">Mobile  :  {{ .message.Mobile}}</p>
                     <p class="font-italic mb-1">Email  :  {{ .message.Email}}</p>
                     <p class="font-italic mb-1">DOB  :  {{ .message.Dob}}</p>
                     <p class="font-italic mb-1">Gender  :  {{ .message.Gender}}</p>
@@ -120,6 +126,8 @@
     {{ else }}
     <br><br><br><br><br>
     <h1 style="color: white; margin-left: 100px;">HI User,&nbsp;&nbsp;&nbsp; Please Login to Explore </h1>
+    {{ end }}
+    
     {{ end }}
 
 

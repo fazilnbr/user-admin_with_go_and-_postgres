@@ -39,6 +39,10 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             {{ if .message }}
             <li class="nav-item">
+              <a href="/show-newusers" class="nav-link active text-light" aria-current="page" >New Users
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="/show-users" class="nav-link active text-light" aria-current="page" >User list
               </a>
             </li>
@@ -95,21 +99,21 @@
                 </div>
                 <div class="ms-3" style="margin-top: 130px;">
                   <h5>{{ .userdata.Name}}</h5>
-                  <p>New York</p>
+                  <p>Kerala</p>
                 </div>
               </div>
               <div class="p-4 text-black" style="background-color: #f8f9fa;">
                 <div class="d-flex justify-content-end text-center py-1">
                   <div>
-                    <p class="mb-1 h5">253</p>
+                    <p class="mb-1 h5">0</p>
                     <p class="small text-muted mb-0">Photos</p>
                   </div>
                   <div class="px-3">
-                    <p class="mb-1 h5">1026</p>
+                    <p class="mb-1 h5">0</p>
                     <p class="small text-muted mb-0">Followers</p>
                   </div>
                   <div>
-                    <p class="mb-1 h5">478</p>
+                    <p class="mb-1 h5">0</p>
                     <p class="small text-muted mb-0">Following</p>
                   </div>
                 </div>
@@ -118,15 +122,19 @@
                 <div class="mb-5">
                   <p class="lead fw-normal mb-1">About</p>
                   <div class="p-4" style="background-color: #f8f9fa;">
+                    <p class="font-italic mb-1">Mobile  :  {{ .userdata.Mobile}}</p>
                     <p class="font-italic mb-1">Email  :  {{ .userdata.Email}}</p>
                     <p class="font-italic mb-1">DOB  :  {{ .userdata.Dob}}</p>
                     <p class="font-italic mb-1">Gender  :  {{ .userdata.Gender}}</p>
                     <p class="font-italic mb-0">Status  :  {{ .userdata.Status}}</p>
                     {{ if eq .userdata.Status "unblocked"}}
                     <a href="/block/{{ .userdata.ID }}" class="btn btn-outline-danger" type="submit"> BLOCK </a>
+                    {{ else if eq .userdata.Status "newuser"}}
+                    <a href="/unblock/{{ .userdata.ID }}" class="btn btn-outline-success" type="submit"> ACTIVATE </a>
                     {{ else }}
                     <a href="/unblock/{{ .userdata.ID }}" class="btn btn-outline-success" type="submit"> UNBLOCK </a>
                     {{ end }}
+                    <a href="/delete/{{ .userdata.ID }}" class="btn btn-outline-danger" type="submit"> DELETE </a>
                   </div>
                 </div>
                 

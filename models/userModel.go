@@ -7,7 +7,8 @@ type User struct {
 	Name     string
 	Dob      string
 	Gender   string
-	Email    string `grom:"unique" gorm:"primaryKey"`
+	Mobile   string `gorm:"index:idx_name,unique"`
+	Email    string `gorm:"index:idx_name,unique"`
 	Password string
 	Status   string
 }

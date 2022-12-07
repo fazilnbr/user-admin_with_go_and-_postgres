@@ -88,6 +88,7 @@
         <!-- here we use the view engine and print the data we get -->
             
         {{ if .users }}
+
         <input type="text" id="myInput" class="form-control bg-light text-dark" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
 
             <table id="myTable" class="table table-striped table-dark">
@@ -95,7 +96,7 @@
                     <th>NAME</th>
                     <th>EMAIL</th>
                     <th>VIEW FOR MORE</th>
-                    <th>BLOCK</th>
+                    <th>ACTIVATE</th>
                 </tr>
                 {{ range .users }}
                     <tr scope="row">
@@ -103,7 +104,7 @@
                     <td>{{ .Email }}</td>
 
                     <td><a href="/adminuserview/{{ .ID }}" class="btn btn-outline-success" type="submit"> VIEW PROFILE </a></td>
-                    <td><a href="/unblock/{{ .ID }}" class="btn btn-outline-danger" type="submit"> UNBLOCK </a></td>
+                    <td><a href="/unblock/{{ .ID }}" class="btn btn-outline-success" type="submit"> ACTIVATE </a></td>
                     </tr>
                 {{ end }}
             </table>
@@ -113,7 +114,6 @@
         
     </div>
     </section>
-
 
 
 
@@ -140,6 +140,8 @@
         }
       }
       </script>
+      
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"

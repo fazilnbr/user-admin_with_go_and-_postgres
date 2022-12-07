@@ -15,7 +15,6 @@ import (
 // init function work before main function
 
 func init() {
-
 	initializer.LoadEnvVariable()
 	initializer.ConnectToDb()
 	initializer.SincDatabase()
@@ -38,6 +37,8 @@ func main() {
 
 	r.GET("/show-users", midileware.AdminAuth, controllers.AdminShowUser)
 
+	r.GET("/show-newusers", midileware.AdminAuth, controllers.AdminShowNewUser)
+
 	r.GET("/block/:id", midileware.AdminAuth, controllers.AdminUserBlock)
 
 	r.GET("/unblock/:id", midileware.AdminAuth, controllers.AdminUserUnBlock)
@@ -45,6 +46,8 @@ func main() {
 	r.GET("/blocked-users", midileware.AdminAuth, controllers.AdminShowBlocedUser)
 
 	r.GET("/adminuserview/:id", midileware.AdminAuth, controllers.AdminUserProfile)
+
+	r.GET("/delete/:id", midileware.AdminAuth, controllers.AdminUserDelete)
 
 	// user side
 
@@ -56,11 +59,15 @@ func main() {
 
 	r.POST("/login-submit", controllers.UserAuth)
 
-	r.POST("/logout", controllers.UserAuth)
+	// r.POST("/logout", controllers.UserAuth)
 
 	r.GET("/register", controllers.UserRegister)
 
 	r.POST("/register-submit", controllers.UserRegisterSubmit)
+
+	r.GET("/editprofile", midileware.RequreAuth, controllers.UserEditProfile)
+
+	r.POST("/editprofile-submit/:id", midileware.RequreAuth, controllers.UserEditProfileSubmit)
 
 	// r.POST("/signup", controllers.Signup)
 

@@ -3,6 +3,7 @@ package midileware
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 
@@ -59,11 +60,21 @@ func RequreAuth(c *gin.Context) {
 		initializer.DB.First(&user, claims["sub"])
 
 		if user.ID == 0 {
+			location := url.URL{Path: "/"}
+			c.Redirect(http.StatusFound, location.RequestURI())
+
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 		if user.Status == "blocked" {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "you are blocked by admin",
+			c.HTML(http.StatusOK, "home.html", gin.H{
+				"error": "Admin Blocked You",
+			})
+			c.AbortWithStatus(http.StatusUnauthorized)
+		}
+
+		if user.Status == "newuser" {
+			c.HTML(http.StatusOK, "home.html", gin.H{
+				"error": "You Are Not Activated Yet",
 			})
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}

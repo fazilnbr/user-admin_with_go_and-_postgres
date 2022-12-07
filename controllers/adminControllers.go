@@ -34,7 +34,7 @@ func AdminLogout(c *gin.Context) {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("auth", tokenString, -1, "", "", false, true)
+	c.SetCookie("adm-auth", tokenString, -1, "", "", false, true)
 	location := url.URL{Path: "/admin"}
 	c.Redirect(http.StatusFound, location.RequestURI())
 
@@ -44,12 +44,12 @@ func AdminLoginSubmit(c *gin.Context) {
 	// Get the email and password from req body
 
 	var body struct {
-		Username string
-		Password string
+		Username string `json:"email" binding:"required"`
+		Password string `json:"password" binding:"required,min=5"`
 	}
 	if c.Bind(&body) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to read body",
+		c.HTML(http.StatusBadRequest, "adminSignin.html", gin.H{
+			"error": "Invalid Inputs Please Check Inputs",
 		})
 		return
 	}
@@ -64,14 +64,14 @@ func AdminLoginSubmit(c *gin.Context) {
 	initializer.DB.First(&user, "Username = ?", body.Username)
 
 	if user.ID == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid *user* name or password ",
+		c.HTML(http.StatusBadRequest, "adminSignin.html", gin.H{
+			"error": "invalid user name or password ",
 		})
 		return
 	}
 	if user.Password != body.Password {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid user name or *password* ",
+		c.HTML(http.StatusBadRequest, "adminSignin.html", gin.H{
+			"error": "invalid user name or password ",
 		})
 		return
 	}
@@ -129,11 +129,33 @@ func AdminShowUser(c *gin.Context) {
 
 	var users []models.User
 	// Get all records
-	initializer.DB.Where("status = ?", "unblocked").Find(&users)
+	initializer.DB.Order("name").Where("status = ?", "unblocked").Find(&users)
 	// SELECT * FROM users WHERE name = 'jinzhu' ORDER BY id LIMIT 1;
 
 	user, _ := c.Get("user")
 	c.HTML(http.StatusOK, "adminShowuser.html", gin.H{
+		"content": "This is an index page...",
+		"message": user,
+		"users":   users,
+	})
+
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"content": "This is an index page...",
+	// 	"message": user,
+	// 	"users":   users,
+	// })
+
+}
+
+func AdminShowNewUser(c *gin.Context) {
+
+	var users []models.User
+	// Get all records
+	initializer.DB.Where("status = ?", "newuser").Find(&users)
+	// SELECT * FROM users WHERE name = 'jinzhu' ORDER BY id LIMIT 1;
+
+	user, _ := c.Get("user")
+	c.HTML(http.StatusOK, "adminShowNewusers.html", gin.H{
 		"content": "This is an index page...",
 		"message": user,
 		"users":   users,
@@ -205,5 +227,18 @@ func AdminShowBlocedUser(c *gin.Context) {
 		"message": user,
 		"users":   users,
 	})
+
+}
+
+func AdminUserDelete(c *gin.Context) {
+	userid := c.Param("id")
+	var user models.User
+
+	// Update with conditions and model value
+	initializer.DB.Unscoped().Where("id = ?", userid).Delete(&user)
+	// UPDATE users SET name='hello', updated_at='2013-11-17 21:34:10' WHERE id=111 AND active=true;
+
+	location := url.URL{Path: "/admin"}
+	c.Redirect(http.StatusFound, location.RequestURI())
 
 }

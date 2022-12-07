@@ -143,6 +143,8 @@ func UserHome(c *gin.Context) {
 }
 
 func UserLogin(c *gin.Context) {
+
+	c.Header("Cache-Control", "no-cache,no-store,must-revalidate")
 	c.HTML(http.StatusOK, "signin.html", gin.H{
 		"content": "This is an index page...",
 	})
@@ -150,6 +152,7 @@ func UserLogin(c *gin.Context) {
 
 func UserLogout(c *gin.Context) {
 
+	c.Header("Cache-Control", "no-cache,no-store,must-revalidate")
 	tokenString, err := c.Cookie("auth")
 	if err != nil {
 		c.AbortWithStatus(http.StatusUnauthorized)
@@ -162,15 +165,16 @@ func UserLogout(c *gin.Context) {
 }
 
 func UserAuth(c *gin.Context) {
+	c.Header("Cache-Control", "no-cache,no-store,must-revalidate")
 	// Get the email and password from req body
 
 	var body struct {
-		Email    string
-		Password string
+		Email    string `json:"email" binding:"required,email"`
+		Password string `json:"password" binding:"required,min=6"`
 	}
 	if c.Bind(&body) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to read body",
+		c.HTML(http.StatusBadRequest, "signin.html", gin.H{
+			"error": "Invalid Inputs Please Check Inputs",
 		})
 		return
 	}
@@ -185,12 +189,25 @@ func UserAuth(c *gin.Context) {
 	initializer.DB.First(&user, "Email = ?", body.Email)
 
 	if user.ID == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.HTML(http.StatusBadRequest, "signin.html", gin.H{
 			"error": "invalid user name or password ",
 		})
 		return
 	}
-
+	if user.Status == "blocked" {
+		c.HTML(http.StatusOK, "home.html", gin.H{
+			"error": "you are blocked by admin",
+		})
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+	if user.Status == "newuser" {
+		c.HTML(http.StatusOK, "home.html", gin.H{
+			"error": "You Are Not Activated Yet",
+		})
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
 	// Compare sent password with user password hash
 
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
@@ -245,16 +262,17 @@ func UserRegisterSubmit(c *gin.Context) {
 	// get the email and password of req body
 
 	var body struct {
-		Name     string
+		Name     string `json:"name" binding:"required"`
 		Dob      string
 		Gender   string
-		Email    string
-		Password string
+		Mobile   string `json:"mobile" binding:"required,len=10"`
+		Email    string `json:"email" binding:"required,email"`
+		Password string `json:"password" binding:"required,min=6"`
 		Status   string
 	}
-	if c.Bind(&body) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to read body",
+	if err := c.Bind(&body); err != nil {
+		c.HTML(http.StatusBadRequest, "signup.html", gin.H{
+			"error": "Invalid Inputs Please Check Inputs",
 		})
 		return
 	}
@@ -271,13 +289,15 @@ func UserRegisterSubmit(c *gin.Context) {
 
 	// create the user
 
-	user := models.User{Name: body.Name, Dob: body.Dob, Gender: body.Gender, Email: body.Email, Password: string(hash), Status: "unblocked"}
+	user := models.User{Name: body.Name, Dob: body.Dob, Gender: body.Gender, Mobile: body.Mobile, Email: body.Email, Password: string(hash), Status: "newuser"}
 
 	result := initializer.DB.Create(&user) // pass pointer of data to Create
 
+	// fmt.Print("\n\nDB ERROR :", result, "\\n\n")
+
 	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to create user",
+		c.HTML(http.StatusBadRequest, "signup.html", gin.H{
+			"error": "failed to create user Mobile Number or Email alrady exist Check inputs   ",
 		})
 		return
 	}
@@ -286,4 +306,41 @@ func UserRegisterSubmit(c *gin.Context) {
 	c.HTML(http.StatusOK, "signin.html", gin.H{
 		"content": "This is an index page...",
 	})
+}
+
+func UserEditProfile(c *gin.Context) {
+
+	user, _ := c.Get("user")
+	fmt.Println("edit user  :", user)
+	c.HTML(http.StatusOK, "signup.html", gin.H{
+		"content": "This is an index page...",
+		"message": user,
+	})
+}
+
+func UserEditProfileSubmit(c *gin.Context) {
+	//get the user
+	userid := c.Param("id")
+	// userdata, _ := c.Get("user")
+	// get the email and password of req body
+	var body struct {
+		Name   string `json:"name" binding:"required"`
+		Dob    string
+		Gender string
+	}
+	if c.Bind(&body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid Inputs Please Check Inputs",
+		})
+		return
+	}
+	// create the user
+	var user models.User
+	// Update with conditions and model value
+	initializer.DB.Model(&user).Where("id = ?", userid).Updates(map[string]interface{}{"Name": body.Name, "Dob": body.Dob, "Gender": body.Gender})
+	// UPDATE users SET name='hello', updated_at='2013-11-17 21:34:10' WHERE id=111 AND active=true;
+
+	location := url.URL{Path: "/"}
+	c.Redirect(http.StatusFound, location.RequestURI())
+
 }
